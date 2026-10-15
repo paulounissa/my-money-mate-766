@@ -26,7 +26,7 @@ export function Chat() {
     transport: new DefaultChatTransport({ api: "/api/chat", body: () => ({ contexto: contextoParaIA() }) }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     onToolCall: ({ toolCall }) => {
-      const i = toolCall.input as Record<string, unknown>;
+      const i = toolCall.input as { tipo?: string; valor?: number; categoria?: string; descricao?: string; nome?: string; valorAlvo?: number; prazo?: string | null; metaId?: string };
       let output: unknown;
       if (toolCall.toolName === "registrar_transacao") {
         const t = financas.addTransacao({
@@ -102,7 +102,7 @@ export function Chat() {
     rec.lang = "pt-BR";
     rec.interimResults = false;
     rec.onresult = (e) => {
-      const txt = e.results[0][0].transcript;
+      const txt = e.results[0]?.[0].transcript ?? "";
       setInput(txt);
       enviar(txt);
     };

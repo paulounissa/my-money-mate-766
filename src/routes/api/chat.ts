@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createOpenAI } from "@ai-sdk/openai";
-import { convertToModelMessages, streamText, tool, type UIMessage } from "ai";
+import { convertToModelMessages, streamText, tool, type ToolSet, type UIMessage } from "ai";
 import { z } from "zod";
 import {
   createLovableAiGatewayRunIdFetch,
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = process.env.LOVABLE_API_KEY;
+        const apiKey = process.env["LOVABLE_API_KEY"];
         if (!apiKey) return new Response("Chave de IA não configurada", { status: 500 });
         const body = (await request.json()) as { messages: UIMessage[]; contexto?: string };
         if (!Array.isArray(body.messages)) return new Response("Requisição inválida", { status: 400 });
@@ -68,7 +68,7 @@ ${body.contexto ?? "Sem dados ainda."}`;
           model: provider.responses("openai/gpt-6-astra"),
           instructions,
           messages: await convertToModelMessages(body.messages),
-          tools,
+          tools: tools as unknown as ToolSet,
           abortSignal: request.signal,
           providerOptions: {
             openai: {
