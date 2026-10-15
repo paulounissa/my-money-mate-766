@@ -29,7 +29,7 @@ function Metas() {
   function criar(e: React.FormEvent) {
     e.preventDefault();
     const v = Number(valor.replace(",", "."));
-    if (!nome.trim() || !(v > 0)) return toast.error("Preencha o nome e um valor maior que zero.");
+    if (!nome.trim() || !(v > 0)) { toast.error("Preencha o nome e um valor maior que zero."); return; }
     financas.addMeta({ nome: nome.trim(), valorAlvo: v, prazo: prazo || null });
     bip();
     toast.success("Meta criada!");

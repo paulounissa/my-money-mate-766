@@ -94,10 +94,10 @@ export function Chat() {
   }
 
   function alternarMic() {
-    if (ouvindo) return recRef.current?.stop();
+    if (ouvindo) { recRef.current?.stop(); return; }
     const W = window as unknown as { SpeechRecognition?: new () => SR; webkitSpeechRecognition?: new () => SR };
     const Ctor = W.SpeechRecognition ?? W.webkitSpeechRecognition;
-    if (!Ctor) return toast.error("Seu navegador não permite falar por voz. Tente no Chrome.");
+    if (!Ctor) { toast.error("Seu navegador não permite falar por voz. Tente no Chrome."); return; }
     const rec = new Ctor();
     rec.lang = "pt-BR";
     rec.interimResults = false;
